@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            build: windows
+            artifact: build/windows/x64/runner/Release
+            name: task_manager-windows
+          - os: ubuntu-latest
+            build: linux
+            artifact: build/linux/x64/release/bundle
+            name: task_manager-linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter build ${{ matrix.build }} --release
+      - name: Archive build
+        shell: bash
+        run: |
+          cd ${{ matrix.artifact }}
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a ../../../${{ matrix.name }}.zip .
+          else
+            tar -czf ../../../${{ matrix.name }}.tar.gz .
+          fi
+      - uses: softprops/action-gh-release@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          files: |
+            task_manager-windows.zip
+            task_manager-linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
