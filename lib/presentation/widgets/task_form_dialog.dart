@@ -102,7 +102,8 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<TaskPriority>(
-                  value: _priority,
+                  key: ValueKey(_priority),
+                  initialValue: _priority,
                   decoration: const InputDecoration(labelText: 'Priorité'),
                   items: TaskPriority.values
                       .map(
@@ -115,7 +116,8 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
                   onChanged: (v) => setState(() => _priority = v!),
                 ),
                 DropdownButtonFormField<TaskStatus>(
-                  value: _status,
+                  key: ValueKey(_status),
+                  initialValue: _status,
                   decoration: const InputDecoration(labelText: 'Statut'),
                   items: TaskStatus.values
                       .map(
@@ -128,7 +130,8 @@ class _TaskFormDialogState extends State<TaskFormDialog> {
                   onChanged: (v) => setState(() => _status = v!),
                 ),
                 DropdownButtonFormField<String?>(
-                  value: _projectId,
+                  key: ValueKey(_projectId),
+                  initialValue: _projectId,
                   decoration: const InputDecoration(labelText: 'Projet'),
                   items: [
                     const DropdownMenuItem(value: null, child: Text('Aucun')),

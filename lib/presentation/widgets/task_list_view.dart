@@ -74,6 +74,7 @@ class TaskListViewState extends ConsumerState<TaskListView> {
                           : ReorderableListView.builder(
                               buildDefaultDragHandles: false,
                               itemCount: visible.length,
+                              // ignore: deprecated_member_use
                               onReorder: (oldIndex, newIndex) {
                                 ref
                                     .read(tasksProvider.notifier)
